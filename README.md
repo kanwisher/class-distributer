@@ -16,9 +16,23 @@ npm install
 
 ## Usage
 
+Rename `config.json.example` to `config.json`
+
+In `config.json`, update `trilogyDir` and `classDir` values to their respective repo directory locations on your machine, then run:
+
 ```sh
 node class-distributer
 ```
+
+Each action will update both the trilogy and class repositories, error handling for git issues is not very sophisticated at this time.
+
+`Push solutions for a single activity` will open a menu to select the curriculum week and activity, then it will move the activity from your trilogy repo folder to your class folder. Then it will add, commit (with message) and push to your class remote repository.
+
+`Push unsolved activities for an entire week` will open a menu to select the curriculum week, then it will move everything but the `Solved` folder from your trilogy repo folder to your class repo folder. Then it will add, commit (with message) and push to your class remote repository.
+
+
+
+
 
 ## Run tests
 
