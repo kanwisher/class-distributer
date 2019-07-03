@@ -1,9 +1,8 @@
-const config = require("./config.json");
 const { 
   trilogyDir,
   classDir,
   activityRoot
-} = config;
+} = require("./config.json");
 
 /*
 * Simple-git
@@ -30,6 +29,8 @@ const path = require('path');
 * if no config, make user create one using inquirer
 * if no matching files are found, ask if you would like to open the directory in explorer/finder
 */
+
+const backString = "<< BACK"
 
 function getFolderNames(parentDir) {
   return fse.readdirSync(parentDir, { withFileTypes: true })
@@ -95,7 +96,6 @@ function exit() {
 
 function updateRepos() {
   return new Promise((resolve, reject) => {
-    console.log('Attempting to update repos');
     trilogyRepo.pull((err, {summary}) => {
       if (err) {
         reject(err);
@@ -116,35 +116,42 @@ function updateRepos() {
 
 function pickWeek(task) {
   const action = task === 'unsolved' ? 'Copy unsolved' : 'Explore';
+  const folders = getFolderNames(trilogyDir);
   const question = {
     type: 'rawlist',
     name: 'weekDir',
     message: `${action} activities for which week?`,
-    choices: getFolderNames(trilogyDir)
+    choices: [...folders, backString ]
   };
   
   inquirer.prompt([question])
     .then(({weekDir}) => {
-      if (task === 'solved') {
-        pickActivity(weekDir);
+      if(weekDir.indexOf(backString)) !== -1) {
+        mainMenu();
+      } else if (task === 'solved') {
+        pickActivity(weekDir, task);
       } else {
         copyUnsolved(weekDir);
       }
     });
 }
 
-function pickActivity(weekDir) {
+function pickActivity(weekDir, task) {
   const weekPath = path.join(trilogyDir, weekDir, activityRoot);
   const question = {
     type: 'rawlist',
     name: 'activityDir',
     message: 'Which activity?',
-    choices: getFolderNames(weekPath)
+    choices: [...getFolderNames(weekPath), backString ]
   }
 
   inquirer.prompt([question])
     .then(({activityDir}) => {
-      copySolutions(weekDir, activityDir)
+      if(activityDir.indexOf(backString) !== -1) {
+        pickWeek(task);
+      } else {
+        copySolutions(weekDir, activityDir)
+      }
     });
 }
 
