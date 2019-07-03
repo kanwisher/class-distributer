@@ -126,7 +126,7 @@ function pickWeek(task) {
   
   inquirer.prompt([question])
     .then(({weekDir}) => {
-      if(weekDir.indexOf(backString)) !== -1) {
+      if(weekDir.indexOf(backString) !== -1) {
         mainMenu();
       } else if (task === 'solved') {
         pickActivity(weekDir, task);
