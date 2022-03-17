@@ -11,6 +11,6 @@
   "dependencies": {
     "fs-extra": "^8.0.0",
     "inquirer": "^6.3.1",
-    "simple-git": "^1.113.0"
+    "simple-git": "^3.3.0"
   }
 }
